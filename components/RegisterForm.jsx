@@ -16,12 +16,35 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleRegisterFormSubmit = (event) => {
+  const clearFormFields = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
+
+  const handleRegisterFormSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
     if (!name || !email || !password) {
       setError("All fields are necessary");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+
+      clearFormFields();
+    } catch (error) {
+      console.error(error);
     }
   };
 

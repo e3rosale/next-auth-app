@@ -24,6 +24,11 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Resources
+
+- [Tutorial](https://www.youtube.com/watch?v=PEMfsqZ2-As)
+- [Mongodb-with-Mongoose-Nextjs](https://github.com/vercel/next.js/tree/canary/examples/with-mongodb-mongoose)
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
