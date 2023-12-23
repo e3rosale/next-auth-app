@@ -45,6 +45,8 @@ const RegisterForm = () => {
       clearFormFields();
     } catch (error) {
       console.error(error);
+      // Create a helper function that takes an Error object and produces a
+      // error message
     }
   };
 
