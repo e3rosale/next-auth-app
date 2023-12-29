@@ -2,6 +2,8 @@ import styles from "@/styles/RegisterForm.module.css";
 import {
   ALL_FIELDS_ARE_NECESSARY,
   DEFAULT_USER_REGISTRATION_ERROR,
+  ISSUE_PARSING_SERVER_RESPONSE_DATA,
+  USER_REGISTRATION_SERVICE_UNAVAILABLE,
 } from "@/utility/constants";
 import Link from "next/link";
 import { useState } from "react";
@@ -27,22 +29,17 @@ const RegisterForm = () => {
   };
 
   const buildFormErrorText = (error) => {
-    let formErrorText = !error.message
-      ? DEFAULT_USER_REGISTRATION_ERROR
-      : error.message;
+    let formErrorText = error.message || DEFAULT_USER_REGISTRATION_ERROR;
 
-    if (error instanceof TypeError && error.message === "Failed to fetch") {
-      formErrorText =
-        "User registration service is down. Please try again later";
+    if (formErrorText === "Failed to fetch") {
+      formErrorText = USER_REGISTRATION_SERVICE_UNAVAILABLE;
     }
 
     if (
-      error instanceof SyntaxError &&
-      error.message ===
-        `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+      formErrorText ===
+      `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
     ) {
-      formErrorText =
-        "Issue parsing server response data. Please try again later";
+      formErrorText = ISSUE_PARSING_SERVER_RESPONSE_DATA;
     }
 
     setError(formErrorText);

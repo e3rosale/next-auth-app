@@ -14,3 +14,8 @@ export const EMAIL_FIELD_NOT_VALID = "Email field valid.";
 export const USER_NOT_FOUND = "User not found.";
 export const USER_FOUND = "User found.";
 export const ERROR_DURING_USER_LOOKUP = "Error during user-lookup process.";
+
+export const USER_REGISTRATION_SERVICE_UNAVAILABLE =
+  "User registration service is unavailable. Please try again later";
+export const ISSUE_PARSING_SERVER_RESPONSE_DATA =
+  "Issue parsing server response data. Please try again later";
