@@ -1,4 +1,8 @@
 import styles from "@/styles/RegisterForm.module.css";
+import {
+  ALL_FIELDS_ARE_NECESSARY,
+  DEFAULT_USER_REGISTRATION_ERROR,
+} from "@/utility/constants";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -22,12 +26,34 @@ const RegisterForm = () => {
     setPassword("");
   };
 
+  const buildFormErrorText = (error) => {
+    let formErrorText = !error.message
+      ? DEFAULT_USER_REGISTRATION_ERROR
+      : error.message;
+
+    if (error instanceof TypeError && error.message === "Failed to fetch") {
+      formErrorText =
+        "User registration service is down. Please try again later";
+    }
+
+    if (
+      error instanceof SyntaxError &&
+      error.message ===
+        `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+    ) {
+      formErrorText =
+        "Issue parsing server response data. Please try again later";
+    }
+
+    setError(formErrorText);
+  };
+
   const handleRegisterFormSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
     if (!name || !email || !password) {
-      setError("All fields are necessary");
+      setError(ALL_FIELDS_ARE_NECESSARY);
       return;
     }
 
@@ -39,14 +65,16 @@ const RegisterForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
+        const { message } = await response.json();
+        throw new Error(message);
       }
 
       clearFormFields();
+      // Navigate to Dashboard page
     } catch (error) {
-      console.error(error);
-      // Create a helper function that takes an Error object and produces a
-      // error message
+      // TODO: Log error in client logs
+      // clientLogger.log(error)
+      buildFormErrorText(error);
     }
   };
 

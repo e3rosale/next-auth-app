@@ -1,4 +1,12 @@
 import User from "@/models/User";
+import {
+  DATABASE_CONNECTION_ERROR,
+  ERROR_DURING_USER_REGISTRATION,
+  FIELDS_NOT_VALID,
+  HTTP_METHOD_NOT_SUPPORTED,
+  USER_COULD_NOT_BE_REGISTERED,
+  USER_REGISTERED,
+} from "@/utility/constants";
 import databaseConnect from "@/utility/mongo";
 import bcrypt from "bcryptjs";
 
@@ -6,7 +14,11 @@ const handler = async (request, response) => {
   try {
     await databaseConnect();
   } catch (error) {
-    response.status(500).json({ success: false, message: error });
+    // TODO: Log error in server logs
+    // serverLogger.log(error);
+    response
+      .status(500)
+      .json({ success: false, message: DATABASE_CONNECTION_ERROR });
   }
 
   if (request.method === "POST") {
@@ -16,7 +28,7 @@ const handler = async (request, response) => {
       if (!name || !email || !password) {
         response
           .status(400)
-          .json({ success: false, message: "All fields must be valid." });
+          .json({ success: false, message: FIELDS_NOT_VALID });
       }
 
       const userExistsResponse = await fetch(
@@ -38,22 +50,27 @@ const handler = async (request, response) => {
 
         response.status(201).json({
           success: true,
-          message: "User registered.",
+          message: USER_REGISTERED,
           data: createdUser,
         });
       }
 
       response
         .status(500)
-        .json({ success: false, message: "User could not be created." });
+        .json({ success: false, message: USER_COULD_NOT_BE_REGISTERED });
     } catch (error) {
-      response.status(500).json({ success: false, message: error });
+      // TODO: Log error in server logs
+      // serverLogger.log(error)
+      response.status(500).json({
+        success: false,
+        message: ERROR_DURING_USER_REGISTRATION,
+      });
     }
   }
 
   response
     .status(405)
-    .json({ success: false, message: "HTTP method not supported." });
+    .json({ success: false, message: HTTP_METHOD_NOT_SUPPORTED });
 };
 
 export default handler;
