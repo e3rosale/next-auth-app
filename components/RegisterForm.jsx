@@ -6,6 +6,7 @@ import {
   USER_REGISTRATION_SERVICE_UNAVAILABLE,
 } from "@/utility/constants";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const DisplayFormError = ({ error }) => {
@@ -21,12 +22,7 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const clearFormFields = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-  };
+  const router = useRouter();
 
   const buildFormErrorText = (error) => {
     let formErrorText = error.message || DEFAULT_USER_REGISTRATION_ERROR;
@@ -66,8 +62,7 @@ const RegisterForm = () => {
         throw new Error(message);
       }
 
-      clearFormFields();
-      // Navigate to Dashboard page
+      router.push("/");
     } catch (error) {
       // TODO: Log error in client logs
       // clientLogger.log(error)
